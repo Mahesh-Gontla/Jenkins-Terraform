@@ -1,0 +1,33 @@
+pipeline{
+    agent any
+    environment{
+        cred = credentials("aws-cred")
+    }
+    stages{
+        stage("checkout stage"){
+            steps{
+                checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/Mahesh-Gontla/Jenkins-Terraform.git']])
+            }
+        }
+        stage("terraform init"){
+            steps{
+                sh 'terraform init'
+            }
+        }
+        stage("tf plan"){
+            steps{
+                sh 'terraform plan'
+            }
+        }
+        stage("apply"){
+            steps{
+                sh 'terraform apply -auto-approve'
+            }
+        }
+        stage("destroy"){
+            steps{
+                sh 'terraform destroy -auto-approve'
+            }
+        }
+    }
+}
